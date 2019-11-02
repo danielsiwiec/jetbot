@@ -49,10 +49,7 @@ class Motor(Configurable):
 	# Direction: FWD = 0, BACK = 1
 	# Speed: (-255) - 255 (neg. values reverse direction of motor)
 
-        if self.channel == 1:
-            self._motor = self._driver.set_drive(self.channel-1, 0, speed)
-        elif self.channel == 2:
-            self._motor = self._driver.set_drive(self.channel-1, 0, speed)
+        self._motor = self._driver.set_drive(self.channel, 0, speed)
         self._driver.enable()
             
     def _release(self):
