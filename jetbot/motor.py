@@ -1,5 +1,22 @@
+# Written by SparkFun Electronics June 2019
+# Author: Wes Furuya
+# *Shell scripts were taken from original jetbot stats.py code.
+#
+# Do you like this code?
+#
+# Help support SparkFun and buy a SparkFun jetbot kit!
+# https://www.sparkfun.com/products/15365
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#------------------------------------------------------------------------
+
 import atexit
-from Adafruit_MotorHAT import Adafruit_MotorHAT
 import traitlets
 from traitlets.config.configurable import Configurable
 
@@ -16,8 +33,8 @@ class Motor(Configurable):
         super(Motor, self).__init__(*args, **kwargs)  # initializes traitlets
 
         self._driver = driver
-        self._motor = self._driver.getMotor(channel)
         atexit.register(self._release)
+        self.channel = channel
         
     @traitlets.observe('value')
     def _observe_value(self, change):
@@ -25,14 +42,19 @@ class Motor(Configurable):
 
     def _write_value(self, value):
         """Sets motor value between [-1, 1]"""
-        mapped_value = int(255.0 * (self.alpha * value + self.beta))
-        speed = min(max(abs(mapped_value), 0), 255)
-        self._motor.setSpeed(speed)
-        if mapped_value < 0:
-            self._motor.run(Adafruit_MotorHAT.FORWARD)
-        else:
-            self._motor.run(Adafruit_MotorHAT.BACKWARD)
+        speed = int(255 * (self.alpha * value + self.beta))
 
+	# Set Motor Controls: .set_drive( motor number, direction, speed)
+	# Motor Number: A = 0, B = 1
+	# Direction: FWD = 0, BACK = 1
+	# Speed: (-255) - 255 (neg. values reverse direction of motor)
+
+        if self.channel == 1:
+            self._motor = self._driver.set_drive(self.channel-1, 0, speed)
+        elif self.channel == 2:
+            self._motor = self._driver.set_drive(self.channel-1, 0, speed)
+        self._driver.enable()
+            
     def _release(self):
         """Stops motor by releasing control"""
-        self._motor.run(Adafruit_MotorHAT.RELEASE)
+        self._motor.disable()
