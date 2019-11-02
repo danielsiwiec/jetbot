@@ -56,26 +56,26 @@ class Robot(SingletonConfigurable):
        
     def forward(self, speed=1.0, duration=None):
         speed = int(speed*255)
-        self.motor_driver.set_drive(0, 0, speed)
-        self.motor_driver.set_drive(1, 0, speed)
+        self.motor_driver.set_drive(self.left_motor_channel, 0, speed)
+        self.motor_driver.set_drive(self.right_motor_channel, 0, speed)
         self.motor_driver.enable()
 
     def backward(self, speed=1.0):
         speed = int(speed*255)
-        self.motor_driver.set_drive(0, 1, speed)
-        self.motor_driver.set_drive(1, 1, speed)
+        self.motor_driver.set_drive(self.left_motor_channel, 1, speed)
+        self.motor_driver.set_drive(self.right_motor_channel, 1, speed)
         self.motor_driver.enable()
 
     def left(self, speed=1.0):
         speed = int(speed*255)
-        self.motor_driver.set_drive(0, 1, speed)
-        self.motor_driver.set_drive(1, 0, speed)
+        self.motor_driver.set_drive(self.left_motor_channel, 1, speed)
+        self.motor_driver.set_drive(self.right_motor_channel, 0, speed)
         self.motor_driver.enable()
 
     def right(self, speed=1.0):
         speed = int(speed*255)
-        self.motor_driver.set_drive(0, 0, speed)
-        self.motor_driver.set_drive(1, 1, speed)
+        self.motor_driver.set_drive(self.left_motor_channel, 0, speed)
+        self.motor_driver.set_drive(self.right_motor_channel, 1, speed)
         self.motor_driver.enable()
 
     def stop(self):
