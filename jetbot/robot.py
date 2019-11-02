@@ -55,28 +55,16 @@ class Robot(SingletonConfigurable):
     # Speed: (-255) - 255 (neg. values reverse direction of motor)
        
     def forward(self, speed=1.0, duration=None):
-        speed = int(speed*255)
-        self.motor_driver.set_drive(self.left_motor_channel, 0, speed)
-        self.motor_driver.set_drive(self.right_motor_channel, 0, speed)
-        self.motor_driver.enable()
+        self.set_motors(speed, speed)
 
     def backward(self, speed=1.0):
-        speed = int(speed*255)
-        self.motor_driver.set_drive(self.left_motor_channel, 1, speed)
-        self.motor_driver.set_drive(self.right_motor_channel, 1, speed)
-        self.motor_driver.enable()
+        self.set_motors(-speed, -speed)
 
     def left(self, speed=1.0):
-        speed = int(speed*255)
-        self.motor_driver.set_drive(self.left_motor_channel, 1, speed)
-        self.motor_driver.set_drive(self.right_motor_channel, 0, speed)
-        self.motor_driver.enable()
+        self.set_motors(-speed, speed)
 
     def right(self, speed=1.0):
-        speed = int(speed*255)
-        self.motor_driver.set_drive(self.left_motor_channel, 0, speed)
-        self.motor_driver.set_drive(self.right_motor_channel, 1, speed)
-        self.motor_driver.enable()
+        self.set_motors(speed, -speed)
 
     def stop(self):
         self.motor_driver.disable()
